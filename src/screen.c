@@ -70,7 +70,9 @@ void generate_window()
     // T intersections left and right.
     // This layer creates Ts.
     const int third_layer = BOUNDARY_LAYER_WIDTH * 3;
-    layer_create_cross(third_layer, third_layer, third_layer + 6, third_layer + 6, -2, -1); 
+    const int temp = third_layer * 3;
+    layer_create_cross(third_layer, third_layer, third_layer + 8, third_layer + 8, -2, -1);
+    layer_create_cross(temp, temp, temp + 12, temp + 12, 2, 1); 
 }
 
 /*
@@ -90,15 +92,15 @@ void layer_create_cross(const int upper_left_i, const int upper_left_j, const in
     int i, j;
     const int vertical_mean = (upper_left_i + lower_right_i) / 2 + offset_i;
     const int horizontal_mean = (upper_left_j + lower_right_j) / 2 + offset_j;
+
     for (i = upper_left_i; i <= lower_right_i; i++)
     {
-        for (j = upper_left_j; j <= lower_right_j; j++)
-        {
-            if (i == vertical_mean || j == horizontal_mean)
-            {
-                window[i][j] = '#';
-            }
-        }
+        window[i][horizontal_mean] = '#';
+    }
+
+    for (j = upper_left_j; j <= lower_right_i; j++)
+    {
+        window[vertical_mean][j] = '#';
     }
 }
 
