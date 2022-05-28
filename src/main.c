@@ -1,8 +1,7 @@
-#include "screen.h"
+#include "game.h"
 
 int main()
 {
-	generate_window();
-	print_window();
+	run();
 	return 0;
 }

@@ -36,4 +36,4 @@ do
 done 
 
 echo "Making executable...'${EXECUTABLE}'"
-${CC} $OBJECTS -o ${EXECUTABLE}
+${CC} ${OBJECTS} -o ${EXECUTABLE}

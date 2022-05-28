@@ -1,10 +1,74 @@
-#include "libs.h"
 #include "screen.h"
+
+
+void render() 
+{
+    generate_window();
+    generate_boundaries();
+    pacman = init_pacman();
+    render_pixels(pacman, PACMAN_SIZE, PACMAN_SIZE, 25, 25);
+    render_map();
+    free_resources(pacman, PACMAN_SIZE);
+    // print_window();
+    // print_pacman();
+}
+
+void update()
+{}
 
 void generate_window()
 {
-    int i, j;
+    u_int32_t i, j;
+    for (i = 0; i < WINDOW_SIZE; i++)
+    {
+        for (j = 0; j < WINDOW_SIZE; j++)
+        {
+            window[i][j] = ' ';
+        }
+    }
+}
+
+void render_map()
+{
+    u_int32_t i, j;
+    for (i = 0; i < WINDOW_SIZE; i++)
+    {
+        for (j = 0; j < WINDOW_SIZE; j++)
+        {
+            printf("%c ", window[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void render_pixels(const u_int8_t **pixels, const u_int32_t pixel_x_size, const u_int32_t pixel_y_size, u_int32_t render_centre_i, u_int32_t render_centre_j)
+{
+    u_int32_t i, j;
+    const u_int32_t render_start_i = render_centre_i - (pixel_x_size / 2);
+    const u_int32_t render_end_i = render_centre_i + (pixel_x_size / 2);
+    const u_int32_t render_start_j = render_centre_j - (pixel_y_size / 2);
+    const u_int32_t render_end_j = render_centre_j + (pixel_y_size / 2);
+    // printf("%d, %d, %d, %d\n", render_start_i, render_end_i, render_start_j, render_end_j);
+    // printf("%c", pixels[0][0]);
+
+    for (i = render_start_i; i <= render_end_i; i++)
+    {
+        for (j = render_start_j; j <= render_end_j; j++)
+        {
+            // printf("(i, j) = (%d, %d)\n", i, j);
+            // printf("(i - render_start_i, j - render_start_j) = (%d, %d)\n", i - render_start_i, j - render_start_j);
+            if (window[i][j] != ' ') continue;
+            window[i][j] = pixels[i - render_start_i][j - render_start_j];
+            // printf("%c ", pixels[i - render_start_i][j - render_start_j]);
+        }
+        // printf("\n");
+    }
+}
+
+void generate_boundaries()
+{
     // Create outer walls.
+    u_int32_t i, j;
     for (i = 0; i < WINDOW_SIZE; i++)
     {
         for (j = 0; j < WINDOW_SIZE; j++)
@@ -20,8 +84,8 @@ void generate_window()
         }
     }
 
-    const int square_boundary_low =  (3 * WINDOW_SIZE) / 8;
-    const int square_boundary_high = (5 * WINDOW_SIZE) / 8;
+    const u_int32_t square_boundary_low =  (3 * WINDOW_SIZE) / 8;
+    const u_int32_t square_boundary_high = (5 * WINDOW_SIZE) / 8;
 
     // Create starting box.
     for (i = square_boundary_low; i < square_boundary_high ; i++)
@@ -38,7 +102,7 @@ void generate_window()
     // Create first layer boundaries.
     // First layer boundaries start 3 # from the walls.
     // Only top and bottom boundaries are created.
-    const int first_layer = BOUNDARY_LAYER_WIDTH;
+    const u_int32_t first_layer = BOUNDARY_LAYER_WIDTH;
     for (i = first_layer; i < WINDOW_SIZE - first_layer; i++)
     {
         for (j = first_layer; j < WINDOW_SIZE - first_layer; j++)
@@ -53,7 +117,7 @@ void generate_window()
     // Create second layer boundaries.
     // First layer boundaries start 6 # from the walls.
     // Only left and right boundaries are created.
-    const int second_layer = BOUNDARY_LAYER_WIDTH * 2;
+    const u_int32_t second_layer = BOUNDARY_LAYER_WIDTH * 2;
     for (i = second_layer; i < WINDOW_SIZE - second_layer; i++)
     {
         for (j = second_layer; j < WINDOW_SIZE - second_layer; j++)
@@ -69,10 +133,10 @@ void generate_window()
     // First layer boundaries start 9 # from the walls.
     // T intersections left and right.
     // This layer creates Ts.
-    const int third_layer = BOUNDARY_LAYER_WIDTH * 3;
-    const int temp = third_layer * 3;
-    layer_create_cross(third_layer, third_layer, third_layer + 8, third_layer + 8, -2, -1);
-    layer_create_cross(temp, temp, temp + 12, temp + 12, 2, 1); 
+    const u_int32_t third_layer = BOUNDARY_LAYER_WIDTH * 3;
+    const u_int32_t temp = third_layer * 3;
+    generate_map_obstacles_cross(third_layer, third_layer, third_layer + 8, third_layer + 8, -2, -1);
+    generate_map_obstacles_cross(temp, temp, temp + 12, temp + 12, 2, 1); 
 }
 
 /*
@@ -87,11 +151,11 @@ void generate_window()
  * can be used to offset the centre of the
  * cross.
  */
-void layer_create_cross(const int upper_left_i, const int upper_left_j, const int lower_right_i, const int lower_right_j, const int offset_i, const int offset_j)
+void generate_map_obstacles_cross(const u_int32_t upper_left_i, const u_int32_t upper_left_j, const u_int32_t lower_right_i, const u_int32_t lower_right_j, const u_int32_t offset_i, const u_int32_t offset_j)
 {
-    int i, j;
-    const int vertical_mean = (upper_left_i + lower_right_i) / 2 + offset_i;
-    const int horizontal_mean = (upper_left_j + lower_right_j) / 2 + offset_j;
+    uint32_t i, j;
+    const uint32_t vertical_mean = (upper_left_i + lower_right_i) / 2 + offset_i;
+    const uint32_t horizontal_mean = (upper_left_j + lower_right_j) / 2 + offset_j;
 
     for (i = upper_left_i; i <= lower_right_i; i++)
     {
@@ -101,18 +165,5 @@ void layer_create_cross(const int upper_left_i, const int upper_left_j, const in
     for (j = upper_left_j; j <= lower_right_i; j++)
     {
         window[vertical_mean][j] = '#';
-    }
-}
-
-void print_window()
-{
-    int i, j;
-    for (i = 0; i < WINDOW_SIZE; i++)
-    {
-        for (j = 0; j < WINDOW_SIZE; j++)
-        {
-            printf("%c ", window[i][j]);
-        }
-        printf("\n");
     }
 }
