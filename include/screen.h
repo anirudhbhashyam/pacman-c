@@ -9,12 +9,11 @@
 
 static u_int8_t window[WINDOW_SIZE][WINDOW_SIZE];
 
-void render();
-void update();
+void init_window();
+void render_window();
+void update_window();
 
-void generate_window();
 void render_pixels(const u_int8_t**, const u_int32_t, const u_int32_t, u_int32_t, u_int32_t);
-void render_map();
 void generate_boundaries();
 void generate_map_obstacles_cross();
 void layer_create_cross(const u_int32_t, const u_int32_t, const u_int32_t, const u_int32_t, const u_int32_t, const u_int32_t);

@@ -1,22 +1,6 @@
 #include "screen.h"
 
-
-void render() 
-{
-    generate_window();
-    generate_boundaries();
-    pacman = init_pacman();
-    render_pixels(pacman, PACMAN_SIZE, PACMAN_SIZE, 25, 25);
-    render_map();
-    free_resources(pacman, PACMAN_SIZE);
-    // print_window();
-    // print_pacman();
-}
-
-void update()
-{}
-
-void generate_window()
+void init_window()
 {
     u_int32_t i, j;
     for (i = 0; i < WINDOW_SIZE; i++)
@@ -26,9 +10,10 @@ void generate_window()
             window[i][j] = ' ';
         }
     }
+    generate_boundaries();
 }
 
-void render_map()
+void render_window() 
 {
     u_int32_t i, j;
     for (i = 0; i < WINDOW_SIZE; i++)
@@ -41,6 +26,9 @@ void render_map()
     }
 }
 
+void update_window()
+{}
+
 void render_pixels(const u_int8_t **pixels, const u_int32_t pixel_x_size, const u_int32_t pixel_y_size, u_int32_t render_centre_i, u_int32_t render_centre_j)
 {
     u_int32_t i, j;
@@ -48,20 +36,14 @@ void render_pixels(const u_int8_t **pixels, const u_int32_t pixel_x_size, const 
     const u_int32_t render_end_i = render_centre_i + (pixel_x_size / 2);
     const u_int32_t render_start_j = render_centre_j - (pixel_y_size / 2);
     const u_int32_t render_end_j = render_centre_j + (pixel_y_size / 2);
-    // printf("%d, %d, %d, %d\n", render_start_i, render_end_i, render_start_j, render_end_j);
-    // printf("%c", pixels[0][0]);
 
     for (i = render_start_i; i <= render_end_i; i++)
     {
         for (j = render_start_j; j <= render_end_j; j++)
         {
-            // printf("(i, j) = (%d, %d)\n", i, j);
-            // printf("(i - render_start_i, j - render_start_j) = (%d, %d)\n", i - render_start_i, j - render_start_j);
             if (window[i][j] != ' ') continue;
             window[i][j] = pixels[i - render_start_i][j - render_start_j];
-            // printf("%c ", pixels[i - render_start_i][j - render_start_j]);
         }
-        // printf("\n");
     }
 }
 
