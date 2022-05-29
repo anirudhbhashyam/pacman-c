@@ -35,5 +35,5 @@ do
 	${CC} ${CFLAGS} -c ${src_file} -o $(echo ${src_file//${SRC}/${OBJ}} | sed 's/\.c/\.o/')
 done 
 
-echo "Making executable...'${EXECUTABLE}'"
+echo "Making executable...${EXECUTABLE}"
 ${CC} ${OBJECTS} -o ${EXECUTABLE}
