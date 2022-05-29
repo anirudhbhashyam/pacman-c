@@ -29,7 +29,7 @@ void render_window()
 void update_window()
 {}
 
-void render_pixels(const u_int8_t **pixels, const u_int32_t pixel_x_size, const u_int32_t pixel_y_size, u_int32_t render_centre_i, u_int32_t render_centre_j)
+void render_pixels(const u_int8_t **pixels, const size_t pixel_x_size, const size_t pixel_y_size, const u_int32_t render_centre_i, const u_int32_t render_centre_j)
 {
     u_int32_t i, j;
     const u_int32_t render_start_i = render_centre_i - (pixel_x_size / 2);

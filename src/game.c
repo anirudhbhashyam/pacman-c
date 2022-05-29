@@ -8,7 +8,7 @@ void run()
 
     render_window();
     
-    free_resources(pacman, PACMAN_SIZE);
+    free_resource_2d(pacman, PACMAN_SIZE);
 }
 
 
