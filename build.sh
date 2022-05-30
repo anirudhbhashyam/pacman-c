@@ -2,7 +2,7 @@ CC=gcc
 SRC="src"
 OBJ="obj"
 INC="include"
-CFLAGS="-Wall -I$INC"
+CFLAGS="-Wall -I${INC}"
 EXECUTABLE=app
 
 if [[ ! -d ${SRC} ]] || [[ -z $(ls -A ${SRC}) ]]; then
